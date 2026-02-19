@@ -1,0 +1,78 @@
+{
+  "dealer": {
+    "id":           "DLR-001",
+    "name":         "AutoDealer Pro",
+    "city":         "Kyiv",
+    "address":      "15 Khreshchatyk St",
+    "phone":        "+380-44-000-0000",
+    "founded_year": 2008,
+    "inventory": [
+      {
+        "vin":          "WBAFR9C57BC123456",
+        "make":         "BMW",
+        "model":        "X5",
+        "year":         2022,
+        "color":        "Black",
+        "price_uah":    2600000,
+        "price_usd":    62000,
+        "mileage":      5000,
+        "status":       "available",
+        "category":     "SUV",
+        "fuel_type":    "Petrol",
+        "transmission": "Automatic",
+        "options": {
+          "sunroof":         true,
+          "heated_seats":    true,
+          "navigation":      true,
+          "parking_sensors": false
+        },
+        "discount_pct": 5
+      },
+      {
+        "vin":          "1HGCM82633A004352",
+        "make":         "Toyota",
+        "model":        "Camry",
+        "year":         2021,
+        "color":        "White",
+        "price_uah":    1120000,
+        "price_usd":    26700,
+        "mileage":      0,
+        "status":       "available",
+        "category":     "Sedan",
+        "fuel_type":    "Hybrid",
+        "transmission": "Automatic"
+        // options and discount_pct can be omitted (omitempty)
+      }
+      // ... 13+ more vehicles ...
+    ],
+    "employees": [
+      {
+        "id":         "EMP-001",
+        "first_name": "Oleksiy",
+        "last_name":  "Kovalenko",
+        "role":       "sales_manager",
+        "hire_date":  "2018-03-15",
+        "salary":     32000,
+        "bonus_pct":  10,
+        "department": "Sales",
+        "phone":      "+380-66-100-2000",
+        "email":      "kovalenko@dealer.ua"
+      }
+      // ... 5+ more employees ...
+    ],
+    "deals": [
+      {
+        "id":           "DEAL-001",
+        "vin":          "WBAFR9C57BC123456",
+        "employee_id":  "EMP-001",
+        "client_name":  "Mykola Shevchenko",
+        "date":         "2024-01-15",
+        "sale_price_uah": 2470000,
+        "sale_price_usd": 58900,
+        "payment_type": "credit",
+        "notes":        "VIP client, repeat purchase"
+      }
+      // ... 9+ more deals ...
+    ]
+  }
+}
