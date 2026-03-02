@@ -1,35 +1,7 @@
 package main
 
-import "testing"
-
-func TestAdd(t *testing.T) {
-	employee := Employee{
-		ID:         "emp_001",
-		FirstName:  "Olena",
-		LastName:   "Kovalenko",
-		Role:       RoleSalesManager,
-		HireDate:   "2022-05-15",
-		Salary:     45000.50,
-		BonusPct:   10.0,
-		Department: "Sales",
-		ContactInfo: ContactInfo{
-			Phone: "+380501234567",
-			Email: "olena.kovalenko@company.com",
-		},
-	}
-
-	if "+380501234567" != employee.ContactInfo.Phone {
-		t.Fatalf("expected +380501234567, got %s", employee.ContactInfo.Phone)
-	}
-
-	if "olena.kovalenko@company.com" != employee.ContactInfo.Email {
-		t.Fatalf("expected olena.kovalenko@company.com, got %s", employee.ContactInfo.Email)
-	}
-
-}
-
-func TestDealerDealerInfo(t *testing.T) {
-	dealer := Dealer{
+func NewTestDealer() *Dealer {
+	return &Dealer{
 		DealerInfo: DealerInfo{
 			ID:          "dealer-001",
 			Name:        "AutoGalaxy",
@@ -126,8 +98,47 @@ func TestDealerDealerInfo(t *testing.T) {
 			},
 		},
 	}
-	dealerName := dealer.Name
-	if dealerName != dealer.Name {
-		t.Fatalf("AutoGalaxy, got %s", dealer.Name)
+}
+func NewTestDealerReporter() *DealerReporter {
+	dealer := NewTestDealer()
+
+	analysis := &DealerAnalysis{
+		// Inventory
+		TotalCars:          len(dealer.Inventory),
+		AvailableCars:      1,
+		SoldCars:           1,
+		ReservedCars:       0,
+		TotalInventoryUAH:  1750000,
+		TotalInventoryUSD:  44000,
+		AverageCarPriceUAH: 875000,
+		MostExpensiveCar:   &dealer.Inventory[1],
+		CheapestCar:        &dealer.Inventory[0],
+
+		TotalEmployees:  2,
+		TotalPayrollUAH: 80000,
+		EmployeesByRole: map[EmployeeRole][]Employee{
+			RoleSalesManager: {dealer.Employees[0]},
+			RoleTechnician:   {dealer.Employees[1]},
+		},
+
+		TotalDeals:      2,
+		TotalRevenueUAH: 1710000,
+		TotalRevenueUSD: 43000,
+		AverageDealUAH:  855000,
+		TopSeller:       &dealer.Employees[0],
+		DealsByPayment: map[PaymentType]int{
+			PaymentCash:   1,
+			PaymentCredit: 1,
+		},
+
+		CategoryStats: map[string]CategoryStat{
+			"Sedan":     {Count: 1},
+			"Hatchback": {Count: 1},
+		},
+	}
+
+	return &DealerReporter{
+		Dealer:   dealer,
+		Analysis: analysis,
 	}
 }

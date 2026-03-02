@@ -55,6 +55,14 @@ const (
 	RoleDirector     EmployeeRole = "director"
 )
 
+var allEmployeeRoles = []EmployeeRole{
+	RoleSalesManager,
+	RoleTechnician,
+	RoleReceptionist,
+	RoleDirector,
+}
+
+// todo ubrat eto
 var allRoles = []EmployeeRole{
 	RoleSalesManager,
 	RoleTechnician,
@@ -86,6 +94,12 @@ const (
 	PaymentCredit  PaymentType = "credit"
 	PaymentLeasing PaymentType = "leasing"
 )
+
+var allPaymentTypes = []PaymentType{
+	PaymentCash,
+	PaymentCredit,
+	PaymentLeasing,
+}
 
 type Deal struct {
 	ID           string      `json:"id"`
@@ -123,13 +137,4 @@ type Root struct {
 type DealerReporter struct {
 	Dealer   *Dealer
 	Analysis *DealerAnalysis // result from analyzer.go
-}
-
-func main() {
-	// CarOptionsFunctionalityCheck()
-	// CarFunctionalityCheck()
-	// EmployeeFunctionalityCheck()
-	// DealFunctionalityCheck()
-	// DealerFunctionalityCheck()
-
 }

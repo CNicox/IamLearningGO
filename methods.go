@@ -1,10 +1,10 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"os"
 	"reflect"
 	"strconv"
 	"strings"
@@ -84,16 +84,6 @@ func (Dealer Dealer) Validate() []error {
 	}
 	errs = append(errs, ValidateAll(Dealer.Inventory)...)
 	return errs
-}
-
-// Reporter is implemented by any object that can write a report.
-type Reporter interface {
-	Report(w io.Writer) error
-}
-
-func (r *DealerReporter) Report(w io.Writer) {
-	jsonData, _ := json.Marshal(r)
-	fmt.Println(string(jsonData))
 }
 
 func (CarOptions CarOptions) String() string {
@@ -239,8 +229,8 @@ func (Deal Deal) HasNotes() bool {
 	return false
 }
 
-func (Dealer Dealer) String() string {
-	return Dealer.Name + " | " + "cars:" + string(len(Dealer.Inventory)) + " | " + string(len(Dealer.Employees)) + " | " + string(len(Dealer.Deals))
+func (d Dealer) String() string {
+	return fmt.Sprintf("%s | cars:%d | %d | %d", d.Name, len(d.Inventory), len(d.Employees), len(d.Deals))
 }
 
 func CarOptionsFunctionalityCheck() {
@@ -292,107 +282,89 @@ func DealFunctionalityCheck() {
 }
 
 func DealerFunctionalityCheck() {
-	dealer := Dealer{
-		DealerInfo: DealerInfo{
-			ID:          "dealer-001",
-			Name:        "AutoGalaxy",
-			City:        "Kyiv",
-			Address:     "123 Main St",
-			Phone:       "+380501234567",
-			FoundedYear: 2005,
-		},
-		Inventory: []Car{
-			{
-				VIN:          "WVWZZZ1JZXW000001",
-				Make:         "Volkswagen",
-				Model:        "Golf",
-				Year:         2022,
-				Color:        "Red",
-				PriceUAH:     800000,
-				PriceUSD:     20000,
-				Mileage:      0,
-				Status:       StatusAvailable,
-				Category:     "Hatchback",
-				FuelType:     "Petrol",
-				Transmission: "Manual",
-				Options: &CarOptions{
-					Sunroof:     true,
-					HeatedSeats: true,
-				},
-				DiscountPct: 5.0,
-			},
-			{
-				VIN:          "1HGCM82633A004352",
-				Make:         "Honda",
-				Model:        "Accord",
-				Year:         2021,
-				Color:        "Blue",
-				PriceUAH:     950000,
-				PriceUSD:     24000,
-				Mileage:      15000,
-				Status:       StatusSold,
-				Category:     "Sedan",
-				FuelType:     "Hybrid",
-				Transmission: "Automatic",
-			},
-		},
-		Employees: []Employee{
-			{
-				ID:         "emp-001",
-				FirstName:  "Olena",
-				LastName:   "Kovalenko",
-				Role:       RoleSalesManager,
-				HireDate:   "2022-05-15",
-				Salary:     45000,
-				BonusPct:   10.0,
-				Department: "Sales",
-				ContactInfo: ContactInfo{
-					Phone: "+380501112233",
-					Email: "olena.kovalenko@autogalaxy.com",
-				},
-			},
-			{
-				ID:         "emp-002",
-				FirstName:  "Ivan",
-				LastName:   "Shevchenko",
-				Role:       RoleTechnician,
-				HireDate:   "2021-03-10",
-				Salary:     35000,
-				Department: "Service",
-				ContactInfo: ContactInfo{
-					Phone: "+380501223344",
-					Email: "ivan.shevchenko@autogalaxy.com",
-				},
-			},
-		},
-		Deals: []Deal{
-			{
-				ID:           "deal-001",
-				VIN:          "WVWZZZ1JZXW000001",
-				EmployeeID:   "emp-001",
-				ClientName:   "John Doe",
-				Date:         "2025-02-01",
-				SalePriceUAH: 760000,
-				SalePriceUSD: 19000,
-				PaymentType:  PaymentCash,
-				Notes:        "First-time customer discount applied",
-			},
-			{
-				ID:           "deal-002",
-				VIN:          "1HGCM82633A004352",
-				EmployeeID:   "emp-001",
-				ClientName:   "Maria Ivanova",
-				Date:         "2025-02-15",
-				SalePriceUAH: 950000,
-				SalePriceUSD: 24000,
-				PaymentType:  PaymentCredit,
-			},
-		},
-	}
+	dealer := NewTestDealer()
 	fmt.Println(dealer.String())
 	fmt.Println(len(dealer.Validate()))
 }
 
-func PrintAll(items []fmt.Stringer, w io.Writer) {
+func PrintAll[T fmt.Stringer](items []T, w io.Writer) {
+	for _, item := range items {
+		fmt.Fprintln(w, item)
+	}
+}
 
+func PrintAllFunctionalityCheck() {
+	car1 := Car{
+		VIN:          "WBA3A5C57CF123456",
+		Make:         "BMW",
+		Model:        "320i",
+		Year:         2018,
+		Color:        "Black",
+		PriceUAH:     850000,
+		PriceUSD:     22500,
+		Mileage:      72000,
+		Status:       StatusAvailable,
+		Category:     "Sedan",
+		FuelType:     "Petrol",
+		Transmission: "Automatic",
+		Options:      nil,
+		DiscountPct:  5,
+	}
+
+	car2 := Car{
+		VIN:          "1HGCV1F14JA765432",
+		Make:         "Honda",
+		Model:        "Accord",
+		Year:         2020,
+		Color:        "White",
+		PriceUAH:     920000,
+		PriceUSD:     24500,
+		Mileage:      45000,
+		Status:       StatusReserved,
+		Category:     "Sedan",
+		FuelType:     "Petrol",
+		Transmission: "CVT",
+		Options:      nil,
+	}
+
+	car3 := Car{
+		VIN:          "JTMEB3FV60D098765",
+		Make:         "Toyota",
+		Model:        "RAV4 Hybrid",
+		Year:         2022,
+		Color:        "Silver",
+		PriceUAH:     1350000,
+		PriceUSD:     36000,
+		Mileage:      18000,
+		Status:       StatusSold,
+		Category:     "SUV",
+		FuelType:     "Hybrid",
+		Transmission: "Automatic",
+		Options:      nil,
+	}
+	cars := []Car{car1, car2, car3}
+	cars_available := GetAvailableCars(cars)
+	PrintAll(cars_available, os.Stdout)
+}
+
+func GetAvailableCars(cars []Car) []Car {
+	cars_available := []Car{}
+	for _, car := range cars {
+		if car.Status == StatusAvailable {
+			cars_available = append(cars_available, car)
+		}
+	}
+	return cars_available
+}
+
+type Number interface {
+	~int | ~int64 | ~float32 | ~float64
+}
+
+func Sum[T Number](nums []T) int {
+	var sum int
+	for _, n := range nums {
+		sum += int(n)
+	}
+	return sum
 }

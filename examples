@@ -1,0 +1,43 @@
+generic function simple syntax example
+
+type Shippable interface {
+	Weight() float64
+}
+
+type Book struct {
+	Title string
+	Grams float64
+}
+
+func (b Book) Weight() float64 {
+	return b.Grams
+}
+
+type Phone struct {
+	Model string
+	Grams float64
+}
+
+func (p Phone) Weight() float64 {
+	return p.Grams
+}
+
+func TotalWeight[T Shippable](items []T) float64 {
+	var total float64
+	for _, item := range items {
+		total += item.Weight()
+	}
+	return total
+}
+
+how to sort
+
+sort.Slice(items, func(i, j int) bool {
+	return items[i].FinalPriceUAH() < items[j].FinalPriceUAH()
+})
+
+interface
+
+type Somethingable interface {
+	method() return something
+}
