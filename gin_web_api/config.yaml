@@ -1,0 +1,22 @@
+server:
+  port: 8080
+  mode: debug
+
+database:
+  host: localhost
+  port: 5433
+  user: xx
+  password: xx
+  name: xx
+  sslmode: disable
+
+jwt:
+  secret: xx
+  ttl: 24h
+
+argon2:
+  memory: 65536
+  iterations: 3
+  parallelism: 2
+  salt_length: 16
+  key_length: 32
