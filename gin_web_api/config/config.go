@@ -2,6 +2,8 @@ package config
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/spf13/viper"
 )
 
@@ -40,7 +42,7 @@ type DatabaseConfig struct {
 }
 type JWTConfig struct {
 	Secret string
-	TTL    string
+	TTL    time.Duration
 }
 type Argon2Config struct {
 	Memory      int
