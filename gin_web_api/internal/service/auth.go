@@ -10,9 +10,6 @@ import (
 	"github.com/alexedwards/argon2id"
 )
 
-// 	hash, err := argon2id.CreateHash("pa$$word", argon2id.DefaultParams)
-//	match, err := argon2id.ComparePasswordAndHash("pa$$word", hash)
-
 type AuthService struct {
 	userRepo repository.UserRepository
 	config   *config.Config
